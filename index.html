@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Always - A Love Poem</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #fff9fa;
+            color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+        
+        .poem-container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+            padding: 2.5rem;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #d23669;
+            margin-bottom: 1.5rem;
+            font-weight: 400;
+            font-size: 2.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .poem {
+            font-size: 1.1rem;
+            text-align: center;
+        }
+        
+        .poem p {
+            margin-bottom: 1.2rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        
+        .signature {
+            text-align: right;
+            font-style: italic;
+            margin-top: 2rem;
+            color: #666;
+            opacity: 0;
+        }
+        
+        .animation-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .petal {
+            position: absolute;
+            background-color: #ffb6c1;
+            border-radius: 50% 0 50% 50%;
+            opacity: 0.7;
+            animation: falling linear infinite;
+        }
+        
+        /* Sound control styles */
+        .sound-control {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: none;
+            outline: none;
+        }
+        
+        .sound-control i {
+            font-size: 20px;
+            color: #d23669;
+        }
+        
+        @keyframes falling {
+            0% {
+                transform: translateY(-10vh) rotate(0deg);
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .poem-container {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .poem {
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .poem-container {
+                padding: 1.2rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+                margin-bottom: 1rem;
+            }
+            
+            .sound-control {
+                left: 10px;
+                bottom: 10px;
+                width: 35px;
+                height: 35px;
+            }
+        }
+    </style>
+    <!-- Font Awesome for sound icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="animation-container" id="animation"></div>
+        
+        <div class="poem-container">
+            <h1>For Always</h1>
+            
+            <div class="poem">
+                <p>For once, you opened your soul<br>
+                And I saw a universe of gentle storms and silent dreams.
+                <br><br>
+                For once, you whispered the kind of love
+                <br>That's not loud, but lasting
+                <br><br>
+                If love ever knocked again at your door,<br>
+                Let it be me - not just for once,<br>
+                But for always. <br><br>
+                For always, I want to be the arms you run to <br>
+                when the world turns cold and loud. <br><br>
+
+                For always, I want to hold your hand <br>
+                like a promise - steady, certain and unshaken. <br><br>
+                Your fears, your tears, your silences <br>
+                I don't just accept them, I treasure them. <br><br>
+                Let it be the calm to your chaos,<br>
+                The prayer you never knew was being answered. <br><br>
+                
+                For always, I'll remember your soul <br>
+                Even in my quietest moments. <br><br>
+                <p>Because someone like you isn't meant to be loved "For Once" <br>
+                You're meant to be loved forever.</p>
+                <p class="signature">~ Md Mazharul Haque Adib</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sound control button -->
+    <button class="sound-control" id="soundControl">
+        <i class="fas fa-volume-up"></i>
+    </button>
+
+    <!-- Audio element (hidden) -->
+    <audio id="backgroundMusic" loop>
+        <source src="duniyaa instrumental.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Audio elements
+const backgroundMusic = document.getElementById('backgroundMusic');
+const soundControl = document.getElementById('soundControl');
+let isPlaying = false;
+
+// Autoplay with user interaction workaround
+document.body.addEventListener('click', function initAudio() {
+    backgroundMusic.volume = 0.3; // Set lower volume
+    backgroundMusic.play()
+        .then(() => {
+            isPlaying = true;
+            soundControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+        })
+        .catch(error => {
+            isPlaying = false;
+            soundControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+        });
+    // Remove this listener after first interaction
+    document.body.removeEventListener('click', initAudio);
+}, { once: true });
+
+            // Toggle sound
+            soundControl.addEventListener('click', function() {
+                if (isPlaying) {
+                    backgroundMusic.pause();
+                    soundControl.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                } else {
+                    backgroundMusic.play();
+                    soundControl.innerHTML = '<i class="fas fa-volume-up"></i>';
+                }
+                isPlaying = !isPlaying;
+            });
+
+            // Create falling petals animation
+            function createPetals() {
+                const container = document.getElementById('animation');
+                const petalCount = Math.floor(window.innerWidth / 10);
+                
+                for (let i = 0; i < petalCount; i++) {
+                    const petal = document.createElement('div');
+                    petal.classList.add('petal');
+                    
+                    // Random properties
+                    const size = Math.random() * 15 + 5;
+                    const posX = Math.random() * window.innerWidth;
+                    const delay = Math.random() * 5;
+                    const duration = Math.random() * 10 + 10;
+                    const colorVal = Math.floor(Math.random() * 55 + 200);
+                    
+                    petal.style.width = `${size}px`;
+                    petal.style.height = `${size}px`;
+                    petal.style.left = `${posX}px`;
+                    petal.style.animationDelay = `${delay}s`;
+                    petal.style.animationDuration = `${duration}s`;
+                    petal.style.backgroundColor = `rgb(255, ${colorVal - 30}, ${colorVal})`;
+                    
+                    container.appendChild(petal);
+                }
+            }
+            
+            // Animate poem lines
+            function animatePoem() {
+                const title = document.querySelector('h1');
+                const lines = document.querySelectorAll('.poem p');
+                const signature = document.querySelector('.signature');
+                
+                // Animate title
+                setTimeout(() => {
+                    title.style.transition = 'opacity 1s ease, transform 1s ease';
+                    title.style.opacity = '1';
+                    title.style.transform = 'translateY(0)';
+                }, 300);
+                
+                // Animate lines sequentially
+                lines.forEach((line, index) => {
+                    setTimeout(() => {
+                        line.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+                        line.style.opacity = '1';
+                        line.style.transform = 'translateY(0)';
+                    }, 500 + index * 200);
+                });
+                
+                // Animate signature
+                setTimeout(() => {
+                    signature.style.transition = 'opacity 1.5s ease';
+                    signature.style.opacity = '1';
+                }, 500 + lines.length * 200);
+            }
+            
+            // Handle window resize
+            function handleResize() {
+                const container = document.getElementById('animation');
+                container.innerHTML = '';
+                createPetals();
+            }
+            
+            // Initialize
+            createPetals();
+            animatePoem();
+            window.addEventListener('resize', handleResize);
+
+            // Try to start music after a short delay (better chance of autoplay working)
+            setTimeout(tryAutoplay, 1000);
+        });
+    </script>
+</body>
+</html>
